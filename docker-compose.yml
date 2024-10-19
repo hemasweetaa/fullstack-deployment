@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  database:
+    image: mongo
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - back
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    networks:
+      - front
+      - back
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    networks:
+      - front
+
+networks:
+  front:
+  back:
+
+volumes:
+  dbdata:
